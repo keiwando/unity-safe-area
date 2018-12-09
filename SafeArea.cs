@@ -10,12 +10,12 @@ public class SafeArea : MonoBehaviour {
     void Start() {
         safeAreaRect = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
-        UpdateSizeToSafeArea();
+        OnRectTransformDimensionsChange();
     }
 
     private void OnRectTransformDimensionsChange() {
 
-        if (Screen.safeArea != lastSafeArea) {
+        if (Screen.safeArea != lastSafeArea && canvas != null) {
             lastSafeArea = Screen.safeArea;
             UpdateSizeToSafeArea();
         }
@@ -30,5 +30,8 @@ public class SafeArea : MonoBehaviour {
 
         safeAreaRect.anchorMin = newAnchorMin;
         safeAreaRect.anchorMax = newAnchorMax;
+
+        safeAreaRect.offsetMin = Vector2.zero;
+        safeAreaRect.offsetMax = Vector2.zero;
     }    
 }
