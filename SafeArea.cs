@@ -1,3 +1,5 @@
+//#define DEBUG
+
 using UnityEngine;
 
 [RequireComponent(typeof(RectTransform))]
@@ -15,15 +17,15 @@ public class SafeArea : MonoBehaviour {
 
     private void OnRectTransformDimensionsChange() {
 
-        if (Screen.safeArea != lastSafeArea && canvas != null) {
-            lastSafeArea = Screen.safeArea;
+        if (GetSafeArea() != lastSafeArea && canvas != null) {
+            lastSafeArea = GetSafeArea();
             UpdateSizeToSafeArea();
         }
     }
 
     private void UpdateSizeToSafeArea() {
 
-        var safeArea = Screen.safeArea;
+        var safeArea = GetSafeArea();
         var inverseSize = new Vector2(1f, 1f) / canvas.pixelRect.size; 
         var newAnchorMin = Vector2.Scale(safeArea.position, inverseSize);
         var newAnchorMax = Vector2.Scale(safeArea.position + safeArea.size, inverseSize);
@@ -33,5 +35,13 @@ public class SafeArea : MonoBehaviour {
 
         safeAreaRect.offsetMin = Vector2.zero;
         safeAreaRect.offsetMax = Vector2.zero;
-    }    
+    }
+
+    private Rect GetSafeArea() {
+        #if DEBUG && UNITY_EDITOR
+            return new Rect(132, 102, 2172, 1023);
+        #else
+            return Screen.safeArea;
+        #endif
+    } 
 }
